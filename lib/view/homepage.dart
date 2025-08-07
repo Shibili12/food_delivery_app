@@ -21,21 +21,29 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Categories"),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          "Categories",
+          style: TextStyle(color: Colors.black),
+        ),
+        // leading: Icon(Icons.keyboard_arrow_left, color: Colors.black),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => Cartpage()));
               },
-              icon: Icon(Icons.shopping_cart))
+              icon: Icon(Icons.shopping_cart, color: Colors.black))
         ],
       ),
       body: Consumer<CategoryProvider>(
           builder: (context, categoryprovider, child) {
         if (categoryprovider.isLoading) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (categoryprovider.categories.isEmpty) {
           return Center(
             child: Text("No categories"),
@@ -45,7 +53,7 @@ class _HomepageState extends State<Homepage> {
           return ListView.builder(
               itemCount: cat.length,
               itemBuilder: (context, index) {
-                return CategoryCard(category: cat[index].categories[index]);
+                return CategoryCard(category: cat[index]);
               });
         }
       }),

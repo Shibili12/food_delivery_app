@@ -3,9 +3,9 @@ import 'package:food_delivery_app/model/category_model.dart';
 import 'package:food_delivery_app/service/category_service.dart';
 
 class CategoryProvider extends ChangeNotifier {
-  List<Categorymodel> _categories = [];
+  List<Category> _categories = [];
   bool _isLoading = false;
-  List<Categorymodel> get categories => _categories;
+  List<Category> get categories => _categories;
   bool get isLoading => _isLoading;
   Future<void> loadCategory() async {
         _isLoading = true;

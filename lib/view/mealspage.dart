@@ -23,21 +23,31 @@ class _MealspageState extends State<Mealspage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-         title: Text("Today Meals"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+        title: Text(
+          "Today Meals",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
-          
-           IconButton(
+          IconButton(
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => Cartpage()));
               },
-              icon: Icon(Icons.shopping_cart))
+              icon: Icon(Icons.shopping_cart, color: Colors.black))
         ],
       ),
       body: Consumer<MealProvider>(builder: (context, mealsprovider, child) {
         if (mealsprovider.isLoading) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (mealsprovider.meals.isEmpty) {
           return Center(
             child: Text("No meals"),
@@ -49,7 +59,7 @@ class _MealspageState extends State<Mealspage> {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemCount: meal.length,
               itemBuilder: (context, index) {
-                return MealsCard(meals: meal[index].meals[index]);
+                return MealsCard(meals: meal[index]);
               });
         }
       }),

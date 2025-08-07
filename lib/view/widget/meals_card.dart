@@ -10,32 +10,54 @@ class MealsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(10)),
       width: MediaQuery.of(context).size.width * .35,
       height: 200,
-      child: Column(
-        children: [
-          Image.network(meals.strMealThumb, height: 120, fit: BoxFit.cover),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                meals.strMeal,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Consumer<CartProvider>(
-                builder: (context, cart, child) {
-                  return IconButton(
-                    icon: Icon(Icons.shopping_cart),
-                    onPressed: () {
-                      Provider.of<CartProvider>(context, listen: false)
-                          .addProductToCart(meals);
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Image.network(
+              meals.strMealThumb,
+              height: 120,
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width * .35,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 10),
+                  width: MediaQuery.of(context).size.width * .30,
+                  child: Text(
+                    meals.strMeal,
+                    overflow: TextOverflow.clip,
+                    maxLines: 3,
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Consumer<CartProvider>(
+                  builder: (context, cart, child) {
+                    return Expanded(
+                      child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          Provider.of<CartProvider>(context, listen: false)
+                              .addProductToCart(meals);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Added to Cart")));
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

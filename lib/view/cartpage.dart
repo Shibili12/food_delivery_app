@@ -12,63 +12,84 @@ class Cartpage extends StatefulWidget {
 }
 
 class _CartpageState extends State<Cartpage> {
-  List<CartItem> cartitems = [];
-
   @override
   void initState() {
-    cartitems = Provider.of<CartProvider>(context, listen: false).cartItems;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("My Cart"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.keyboard_arrow_left, color: Colors.black)),
+        title: Text(
+          "My Cart",
+          style: TextStyle(color: Colors.black),
+        ),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => Homepage()));
               },
-              icon: Icon(Icons.home))
+              icon: Icon(Icons.home, color: Colors.black))
         ],
       ),
       body: ListView.builder(
-          itemCount: cartitems.length,
+          itemCount: cartProvider.cartItems.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                backgroundImage:
-                    NetworkImage(cartitems[index].meal.strMealThumb),
-              ),
-              title: Text(cartitems[index].meal.strMeal),
-              subtitle: Text("Qty : ${cartitems[index].quantity}"),
-              trailing: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        Provider.of<CartProvider>(context, listen: true)
-                            .updateCartItemQuantity(cartitems[index].meal,
-                                cartitems[index].quantity + 1);
-                      },
-                      icon: Icon(Icons.add)),
-                  IconButton(
-                      onPressed: () {
-                        Provider.of<CartProvider>(context, listen: true)
-                            .removeProductFromCart(
-                          cartitems[index].meal,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ))
-                ],
-              ),
-            );
+            if (cartProvider.cartItems.isEmpty) {
+              return Text("No Carts");
+            } else {
+              return Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        cartProvider.cartItems[index].meal.strMealThumb),
+                  ),
+                  title: Text(cartProvider.cartItems[index].meal.strMeal),
+                  subtitle:
+                      Text("Qty : ${cartProvider.cartItems[index].quantity}"),
+                  trailing: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Provider.of<CartProvider>(context, listen: false)
+                                .updateCartItemQuantity(
+                                    cartProvider.cartItems[index].meal,
+                                    cartProvider.cartItems[index].quantity + 1);
+                            //           ScaffoldMessenger.of(context).showSnackBar(
+                            // SnackBar(content: Text("Added to Cart")));
+                          },
+                          child: Icon(Icons.add)),
+                      GestureDetector(
+                          onTap: () {
+                            Provider.of<CartProvider>(context, listen: false)
+                                .removeProductFromCart(
+                              cartProvider.cartItems[index].meal,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("deleted item")));
+                          },
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ))
+                    ],
+                  ),
+                ),
+              );
+            }
           }),
     );
   }
